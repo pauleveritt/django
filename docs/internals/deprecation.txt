@@ -168,6 +168,9 @@ details on these changes.
 * ``FileField`` methods ``get_directory_name()`` and ``get_filename()`` will be
   removed.
 
+* Support for ``Widget.render()`` methods without the ``renderer`` argument
+  will be removed.
+
 .. _deprecation-removed-in-1.10:
 
 1.10
