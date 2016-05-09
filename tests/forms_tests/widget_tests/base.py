@@ -7,7 +7,7 @@ from django.test import SimpleTestCase
 from django.utils.functional import cached_property
 
 try:
-    import jinaj2
+    import jinja2
 except ImportError:
     jinja2 = None
 else:

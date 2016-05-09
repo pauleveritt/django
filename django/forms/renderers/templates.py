@@ -28,10 +28,15 @@ class TemplateRenderer(object):
             return
 
         if not jinja2:
-            # Configure a minimal DjangoTemplates with DIRS=['django/forms/templates']
-            # and deprecation warning saying this automatic configuration will
-            # be RemovedInDjango20Warning?
-            pass
+            # TODO: Add RemovedInDjango20Warning indicating this will be removed.
+            return DjangoTemplates({
+                'APP_DIRS': False,
+                'DIRS': [
+                    os.path.join(os.path.dirname(forms.__file__), 'templates'),
+                ],
+                'NAME': 'djangoforms',
+                'OPTIONS': {},
+            })
 
         # TODO: RemovedInDjango20Warning indicating this will be removed and
         # TEMPLATES should be modified to include this Engine?

@@ -6,7 +6,7 @@ from django.template.loader import get_template
 from django.test import SimpleTestCase, override_settings
 
 try:
-    import jinaj2
+    import jinja2
 except ImportError:
     jinja2 = None
 else:
