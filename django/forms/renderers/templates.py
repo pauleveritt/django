@@ -4,10 +4,14 @@ from django import forms
 from django.apps import apps
 from django.template import engines
 from django.template.backends.django import DjangoTemplates
-from django.template.backends.jinja2 import Jinja2
 from django.template.loader import get_template
 from django.template.loaders import app_directories
 from django.utils.functional import cached_property
+
+try:
+    import jinja2
+except ImportError:
+    jinja2 = None
 
 ROOT = os.path.join(os.path.dirname(forms.__file__), 'jinja2')
 
@@ -23,10 +27,19 @@ class TemplateRenderer(object):
         if templates_configured():
             return
 
+        if not jinja2:
+            # Configure a minimal DjangoTemplates with DIRS=['django/forms/templates']
+            # and deprecation warning saying this automatic configuration will
+            # be RemovedInDjango20Warning?
+            pass
+
+        # TODO: RemovedInDjango20Warning indicating this will be removed and
+        # TEMPLATES should be modified to include this Engine?
         return self.default_engine()
 
     @staticmethod
     def default_engine():
+        from django.template.backends.jinja2 import Jinja2
         return Jinja2({
             'APP_DIRS': False,
             'DIRS': [ROOT],

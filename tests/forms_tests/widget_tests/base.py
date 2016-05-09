@@ -3,9 +3,15 @@ import os
 from django import forms
 from django.forms.renderers.templates import TemplateRenderer
 from django.template.backends.django import DjangoTemplates
-from django.template.backends.jinja2 import Jinja2
 from django.test import SimpleTestCase
 from django.utils.functional import cached_property
+
+try:
+    import jinaj2
+except ImportError:
+    jinja2 = None
+else:
+    from django.template.backends.jinja2 import Jinja2
 
 ROOT = os.path.join(os.path.dirname(forms.__file__), 'templates')
 
@@ -44,20 +50,20 @@ class WidgetTest(SimpleTestCase):
     @classmethod
     def setUpClass(cls):
         cls.django_renderer = DjangoRenderer()
-        cls.jinja2_renderer = Jinja2Renderer()
+        cls.jinja2_renderer = Jinja2Renderer() if jinja2 else None
         super(WidgetTest, cls).setUpClass()
 
     def check_html(self, widget, name, value, html='', attrs=None, fix_quotes=False,
                    test_once=False, **kwargs):
+        if self.jinja2_renderer:
+            output = widget.render(
+                name, value, attrs=attrs, renderer=self.jinja2_renderer, **kwargs
+            )
+            # Normalize quote escaping between Jinja2 and DTL
+            output = output.replace("&#34;", "&quot;")
+            self.assertHTMLEqual(output, html)
 
-        output = widget.render(
-            name, value, attrs=attrs, renderer=self.jinja2_renderer, **kwargs
-        )
-        # Normalize quote escaping between Jinja2 and DTL
-        output = output.replace("&#34;", "&quot;")
-        self.assertHTMLEqual(output, html)
-
-        if test_once:
+        if jinja2 and test_once:
             return
 
         output = widget.render(

@@ -1,12 +1,21 @@
+import unittest
+
 from django.forms.renderers.templates import TemplateRenderer
 from django.template.backends.django import DjangoTemplates
-from django.template.backends.jinja2 import Jinja2
 from django.template.loader import get_template
 from django.test import SimpleTestCase, override_settings
+
+try:
+    import jinaj2
+except ImportError:
+    jinja2 = None
+else:
+    from django.template.backends.jinja2 import Jinja2
 
 
 class RendererTest(SimpleTestCase):
 
+    @unittest.skipUnless(jinja2, 'jinja2 not installed.')
     @override_settings(TEMPLATES=[{
         'BACKEND': 'django.template.backends.dummy.TemplateStrings',
     }])

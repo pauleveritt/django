@@ -57,6 +57,9 @@ class ClearableFileInputTest(WidgetTest):
         self.assertIn('my&lt;div&gt;file', output)
         self.assertNotIn('my<div>file', output)
 
+        if not self.jinja2_renderer:
+            return
+
         output = widget.render('my<div>file', field, renderer=self.jinja2_renderer)
         self.assertNotIn(field.url, output)
         self.assertIn('href="something?chapter=1&amp;sect=2&amp;copy=3&amp;lang=en"', output)
