@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 from django.contrib.admin.tests import AdminSeleniumTestCase
@@ -21,5 +20,4 @@ class LiveWidgetTests(AdminSeleniumTestCase):
         self.selenium.get(self.live_server_url + reverse('article_form', args=[article.pk]))
         self.selenium.find_element_by_id('submit').submit()
         article = Article.objects.get(pk=article.pk)
-        # Should be "\nTst\n" after #19251 is fixed
         self.assertEqual(article.content, "\r\nTst\r\n")
